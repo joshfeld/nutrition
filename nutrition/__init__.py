@@ -31,12 +31,13 @@ def create_app(test_config=None):
 
     # Load blueprints
     from . import home
-
     app.register_blueprint(home.bp)
     app.add_url_rule("/", endpoint="index")
 
     from . import auth
-
     app.register_blueprint(auth.bp)
+
+    from . import calorie
+    app.register_blueprint(calorie.bp)
 
     return app
