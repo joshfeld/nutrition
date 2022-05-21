@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from app.auth import login_required
+from nutrition.auth import login_required
 
 bp = Blueprint('home', __name__)
 
