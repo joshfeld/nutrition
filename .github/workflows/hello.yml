@@ -19,7 +19,7 @@ jobs:
         run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
       - name: Check differences
-        run: git diff origin/master HEAD
+        run: git diff origin/main HEAD
       - name: Test action step
         id: hello
         uses: joshfeld/jf_test_action@v1
