@@ -13,15 +13,12 @@ jobs:
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
-      - name: Extract number of commits
-        shell: bash
-        run: echo "##[set-output name=diff;]$(echo $(git for-each-ref --format="%(push:track)" refs/heads/$(git rev-parse --abbrev-ref HEAD)))"
-        id: extract_commits
       - name: Fetch
         run: |
           git fetch --no-tags --prune origin +refs/heads/*:refs/remotes/origin/*
       - name: Check differences
-        run: git rev-list --left-right --count ${{ steps.extract_branch.outputs.branch }}...origin/main
+        run: echo "##[set-output name=diff;]$(git rev-list --left-right --count ${{ steps.extract_branch.outputs.branch }}...origin/main)"
+        id: extract_commits
       - name: Test action step
         id: hello
         uses: joshfeld/jf_test_action@v1
