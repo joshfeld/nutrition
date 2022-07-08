@@ -7,6 +7,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: git
+        run: |
+          git --version
+          git for-each-ref --format="%(push:track)" refs/heads/$(git rev-parse --abbrev-ref HEAD)
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
@@ -19,7 +23,7 @@ jobs:
         id: hello
         uses: joshfeld/jf_test_action@v1
         with:
-          who-to-greet: ${{ steps.extract_commits.outputs.diff }}
+          commit-diff: ${{ steps.extract_commits.outputs.diff }}
           branch-name: ${{ steps.extract_branch.outputs.branch }}
       # Use the output from the `hello` step
       - name: Get the output time
