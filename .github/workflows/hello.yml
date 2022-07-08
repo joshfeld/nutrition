@@ -21,7 +21,7 @@ jobs:
         id: extract_commits
       - name: Test action step
         id: hello
-        uses: joshfeld/jf_test_action@v1
+        uses: joshfeld/jf_test_action@main
         with:
           commit-diff: ${{ steps.extract_commits.outputs.diff }}
           branch-name: ${{ steps.extract_branch.outputs.branch }}
