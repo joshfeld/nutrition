@@ -7,6 +7,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
@@ -17,7 +19,7 @@ jobs:
         id: extract_commits
       - name: Fetch
         run: |
-          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          git fetch --no-tags --prune --depth=0 origin +refs/heads/*:refs/remotes/origin/*
       - name: Check differences
         run: git rev-list --left-right --count ${{ steps.extract_branch.outputs.branch }}...origin/main
       - name: Test action step
