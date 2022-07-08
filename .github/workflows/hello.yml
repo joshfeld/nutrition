@@ -5,12 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to say hello
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Hello world action step
         id: hello
         uses: joshfeld/jf_test_action@v1
         with:
           who-to-greet: 'Josh'
-          branch-name: ${GITHUB_REF##*/}
+          branch-name: ${{ steps.extract_branch.outputs.branch }}
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
