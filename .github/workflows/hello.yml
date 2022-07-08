@@ -10,6 +10,7 @@ jobs:
         uses: joshfeld/jf_test_action@v1
         with:
           who-to-greet: 'Josh'
+          branch-name: ${GITHUB_REF##*/}
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
