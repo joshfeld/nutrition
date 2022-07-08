@@ -7,10 +7,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Checkout main
-        uses: actions/checkout@v3
-        with:
-          ref: main
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
@@ -19,11 +15,12 @@ jobs:
         shell: bash
         run: echo "##[set-output name=diff;]$(echo $(git for-each-ref --format="%(push:track)" refs/heads/$(git rev-parse --abbrev-ref HEAD)))"
         id: extract_commits
-      - name: git
+      - name: Fetch
         run: |
-          git --version
-          git branch
-      - name: Hello world action step
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+      - name: Check differences
+        run: git diff origin/master HEAD
+      - name: Test action step
         id: hello
         uses: joshfeld/jf_test_action@v1
         with:
