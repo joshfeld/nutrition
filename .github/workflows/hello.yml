@@ -1,15 +1,30 @@
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
     name: A job to say hello
     steps:
-      - name: Hello world action step
-        id: hello
-        uses: joshfeld/jf_test_action@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          who-to-greet: 'Josh'
+          fetch-depth: 0
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Fetch
+        run: |
+          git fetch --no-tags --prune origin +refs/heads/*:refs/remotes/origin/*
+      - name: Check differences
+        run: echo "##[set-output name=diff;]$(git rev-list --left-right --count ${{ steps.extract_branch.outputs.branch }}...origin/main)"
+        id: extract_commits
+      - name: Test action step
+        id: hello
+        uses: joshfeld/jf_test_action@main
+        with:
+          commit-diff: ${{ steps.extract_commits.outputs.diff }}
+          branch-name: ${{ steps.extract_branch.outputs.branch }}
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
